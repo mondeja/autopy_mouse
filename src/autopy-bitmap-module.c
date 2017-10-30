@@ -13,7 +13,7 @@
 static PyObject *bitmap_capture_screen(PyObject *self, PyObject *args);
 
 static PyMethodDef BitmapMethods[] = {
-	{"capture_screen", bitmap_capture_screen, METH_NOARGS | METH_O,
+	{"capture_screen", bitmap_capture_screen, METH_NOARGS,
 	 "capture_screen(rect=None) -> Bitmap object\n"
 	 "Returns a screengrab of the given portion of the main display,\n"
 	 "or the entire display if rect is None."},
