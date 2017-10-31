@@ -2,6 +2,17 @@
 
 Autopy mouse is a simplified version of [autopy by Michael Sanders](https://github.com/msanders/autopy), for work only with the mouse module.
 
+### Requirements
+
+* Python 2.5+
+* For Mac OS X:
+    - zlib
+    - Mac OS 10.5 or later (earlier versions may work, but they are as-of-now untested)
+* For Windows:
+    - libpng & zlib (included in both the installer and the source archive)
+* For everything else:
+    - zlib
+    - X11 with the XTest extension (also known as the Xtst library)
 
 ### Summary
 
