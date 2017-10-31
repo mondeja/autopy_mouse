@@ -66,26 +66,7 @@ def create_ext_modules(src_dir):
     modules = {
                 'mouse' : {'files' : ['autopy-mouse-module.c', 'mouse.c',
                                       'deadbeef_rand.c', 'py-convenience.c',
-                                      'screen.c']},
-                'bitmap' : {'files' : ['autopy-bitmap-module.c',
-                                       'py-convenience.c', 'py-bitmap-class.c',
-                                       'MMBitmap.c',
-                                       'io.c', 'bmp_io.c',
-                                       'png_io.c', 'str_io.c', 'snprintf.c',
-                                       'screengrab.c', 'screen.c',
-                                       'pasteboard.c', 'color_find.c',
-                                       'bitmap_find.c', 'UTHashTable.c',
-                                       'MMPointArray.c', 'zlib_util.c',
-                                       'base64.c',
-                                       ],
-                            'libraries' : ['png', 'z']},
-                'color' : {'files' : ['autopy-color-module.c', 'MMBitmap.c']},
-                'screen' : {'files' : ['autopy-screen-module.c', 'screen.c',
-                                       'screengrab.c', 'MMBitmap.c']},
-                'key' : {'files' : ['autopy-key-module.c', 'keypress.c',
-                                    'keycode.c', 'deadbeef_rand.c',
-                                    'py-convenience.c']},
-                'alert' : {'files' : ['autopy-alert-module.c', 'alert.c']}
+                                      'screen.c']}
               }
 
     # Global compilation/linkage flags.
@@ -126,29 +107,20 @@ def create_ext_modules(src_dir):
             module.setdefault('lflags', []).extend(['-framework', framework])
 
         # Add frameworks for appropriate modules
-        for module in 'mouse', 'key', 'alert':
-            add_framework(modules[module], 'CoreFoundation')
-        for module in 'mouse', 'key', 'screen', 'bitmap':
-            add_framework(modules[module], 'ApplicationServices')
-        for module in 'screen', 'bitmap':
-            add_framework(modules[module], 'OpenGL')
+        add_framework(modules['mouse'], 'CoreFoundation')
+        add_framework(modules['mouse'], 'ApplicationServices')
 
-        add_framework(modules['key'], 'Carbon')
 
         # Add OS X-specific #define's.
         macros.append(('IS_MACOSX', None))
     elif USE_X11:
-        for module in 'mouse', 'key', 'screen', 'bitmap':
-            modules[module]['files'].append('xdisplay.c')
-            modules[module].setdefault('libraries', []).append('X11')
-        for module in 'mouse', 'key':
-            modules[module].setdefault('libraries', []).append('Xtst')
+        modules['mouse']['files'].append('xdisplay.c')
+        modules['mouse'].setdefault('libraries', []).append('X11')
+        modules['mouse'].setdefault('libraries', []).append('Xtst')
 
         for dir in '/usr/X11/lib', '/usr/X1186/lib':
             if os.path.exists(dir):
                 libdirs.append(dir)
-
-        modules['alert']['files'].append('snprintf.c')
 
         # Add X11-specific #define's.
         macros.append(('USE_X11', None))
@@ -161,16 +133,7 @@ def create_ext_modules(src_dir):
             # have to add this flag separately:
             modules[module].setdefault('lflags', []).append(lib + '.lib')
 
-        for module in 'mouse', 'key', 'screen', 'bitmap', 'alert':
-            add_lib(modules[module], 'user32')
-        for module in 'screen', 'bitmap':
-            add_lib(modules[module], 'Gdi32')
-
-        # MSVC doesn't use same lib names as everybody else.
-        for wrong_lib in 'png', 'z':
-            modules['bitmap']['libraries'].remove(wrong_lib)
-        for right_lib in 'libpng', 'zlib':
-            add_lib(modules['bitmap'], right_lib)
+        add_lib(modules['mouse'], 'user32')
 
         # We store Windows libraries and headers in our own custom folder.
         win_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -219,7 +182,7 @@ def create_ext_modules(src_dir):
                                      extra_link_args=extra_link_args))
     return ext_modules
 
-PACKAGE_NAME = 'autopy'
+PACKAGE_NAME = 'autopy_mouse'
 PACKAGE_DESCRIPTION = \
 '''AutoPy is a simple, cross-platform GUI automation toolkit for Python. It
 includes functions for controlling the keyboard and mouse, finding colors
